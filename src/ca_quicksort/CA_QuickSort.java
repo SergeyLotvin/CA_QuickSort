@@ -5,7 +5,9 @@ import java.util.Scanner;
 public class CA_QuickSort {
 
     public static int[] intArr = null;
-//public static int pivot=0;
+    public static boolean fs=true;
+    public static int pivot=0;
+    public static int fpivot=0, fpartition=0;
 
     public static void printArray() {
         for (int i = 0; i < intArr.length; i++) {
@@ -18,7 +20,7 @@ public class CA_QuickSort {
         int leftPtr = left;
         int rightPtr = right+1;
         while (true) {
-            while (intArr[++leftPtr] < pivot);
+            while (leftPtr < right && intArr[++leftPtr] < pivot);
             while (rightPtr > 0 && intArr[--rightPtr] > pivot);
             if (leftPtr >= rightPtr) {
                 System.out.println("break leftPtr " + leftPtr + " rightPtr " + rightPtr);
@@ -46,12 +48,29 @@ public class CA_QuickSort {
             return;
         } else {
 
-            int pivot = intArr[left];
+            if (fs) {pivot = intArr[left];} else{pivot = intArr[right-1];}
             System.out.println("left - " + left + " right - " + right + " pivot - " + pivot);
-            int partition = partitionArr(left, right, pivot);
+            int partition = partitionArr(left, right, pivot);  if (fs) {fpartition = partition; fs=false;}
             System.out.println("after partition partition is - " + partition);
-            //recQuickSort(left, partition -1);
-            //recQuickSort(partition+1, right);
+            
+            recQuickSort(left, partition -1); 
+            //recQuickSort(partition+1, right); 
+            System.out.println("fin");
+        }
+    }
+    
+     public static void recQuickSortR(int left, int right) {
+        printArray();
+        if (right - left <= 0) { System.out.println("SortR right - left = "+right+" - "+left);
+            return;
+        } else {
+
+            if (fs) {pivot = intArr[right];fs=false;} else{pivot = intArr[left];}
+            System.out.println("SortR left - " + left + " right - " + right + " pivot - " + pivot);
+            int partition = partitionArr(left, right, pivot);
+            System.out.println(" SortR after partition partition is - " + partition);            
+           recQuickSortR(partition, right); 
+           
         }
     }
 
@@ -83,7 +102,11 @@ public class CA_QuickSort {
 //System.out.println("index "+idx);
         quickSort();
 
-        printArray();
+        System.out.print (" final left = ");printArray();
+        System.out.println ("");
+        System.out.println (" fpartition = "+fpartition+ " right "+(size-1));
+        fs=true;
+        recQuickSortR(fpartition, size-1);
 
     }
 
